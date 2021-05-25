@@ -3,31 +3,37 @@ import java.awt.*;
 
 public class GamePanel extends JPanel {
 
-    private Grid grid;
+    private GameState gameState;
 
-    public GamePanel (Grid grid) {
-        panelInit();
-        this.grid = grid;
-    }
+    private int cellSize;
 
-    private void panelInit() {
+    private final int cellsAcross = 100;
+
+    public GamePanel () {
+        gameState = new GameState();
     }
 
     public void paint(Graphics g) {
         super.paint(g);
-        drawGrid(g);
+        drawCells(g);
     }
 
-    private void drawGrid(Graphics g) {
-        for (int i = 0; i < grid.getNumCellsX(); i++) {
-            g.drawLine(i * grid.getCellSize(), 0, i * grid.getCellSize(), getHeight());
-        }
-        for (int i = 0; i < grid.getNumCellsX(); i++) {
-            g.drawLine(0, i * grid.getCellSize(), getWidth(),i * grid.getCellSize());
+    public void setGameState (GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    private void drawCells(Graphics g) {
+        cellSize = getWidth() / cellsAcross;
+        for (Cell cell : gameState.getActiveCells()) {
+            if (cell.isAlive()) {
+                g.setColor(Color.ORANGE);
+                g.fillRect(cell.getX() * cellSize, cell.getY() * cellSize, cellSize-1, cellSize-1);
+                g.setColor(Color.BLACK);
+            }
         }
     }
 
-    public void setGrid(Grid grid) {
-        this.grid = grid;
+    public int getCellSize () {
+        return cellSize;
     }
 }
